@@ -7,16 +7,17 @@ function renderFrame(){
     nameInputElement.id="ini-input";        
     let nameInputBtnElement= document.createElement("button");
     nameInputBtnElement.innerHTML="Hizufügen";
-    nameInputBtnElement.setAttribute("onclick","addUser()");        
-    nameInputBtnElement.id="ini-input-btn";        
+    nameInputBtnElement.id="ini-input-btn"; 
+    nameInputBtnElement.addEventListener("click",addUser);        
     let nameFrameElement= document.createElement("div");
     nameFrameElement.id="ini-names";        
     let btnFrameElement= document.createElement("div");
     btnFrameElement.style="width: 260px";
     btnFrameElement.id="btns";
     let reduceBtnElement= document.createElement("button");
+    reduceBtnElement.id="ini-reduce-btn";
     reduceBtnElement.innerHTML="Alle minus 10";
-    reduceBtnElement.setAttribute("onclick","reduceAll()");
+    reduceBtnElement.addEventListener("click",reduceAll);  
     
     divFrameElement.append(nameInputElement);
     divFrameElement.append(nameInputBtnElement);
@@ -32,21 +33,22 @@ function addUser()
     document.getElementById("ini-input").value="";
 }
 function addToMe(btn)
-{
+{    
+    btn=this;
     if(btn.title.length<1){
-    let names= document.getElementsByName('playername');
-    let selectet=[];
-    for (let i = 0; i < names.length; i++) {
-        if(names[i].children[0].checked){
-        selectet.push(names[i].children[1].innerHTML);
-        names[i].children[0].checked=false;
+        let names= document.getElementsByName('playername');
+        let selectet=[];
+        for (let i = 0; i < names.length; i++) {
+            if(names[i].children[0].checked){
+                selectet.push(names[i].children[1].innerHTML);
+                names[i].children[0].checked=false;
+            }
         }
-    }
-    btn.title=selectet.join("\n")
-    btn.style="border-color: blue; width: 25px;"
+        btn.title=selectet.join("\n")
+        btn.style="border-color: blue; width: 25px; box-sizing: border-box;"
     }
     else{           
-        btn.style="border-color: red; width: 25px;"
+        btn.style="border-color: red; width: 25px; box-sizing: border-box;"
     }        
 }
 function createNewPlayer(name){
@@ -57,13 +59,14 @@ function createNewPlayer(name){
     checkboxElement.setAttribute("type","checkbox");
     let lableElement= document.createElement("label");
     lableElement.innerHTML=name;   
+    lableElement.style="display: inline;";
     let inputElement= document.createElement("input");
     inputElement.style="width: 20px;";
     let plusElement= document.createElement("button");
-    plusElement.setAttribute("onclick","changeValue(this)");
     plusElement.innerHTML="+"; 
+    plusElement.addEventListener("click",changeValue);
     let minusElement= document.createElement("button");
-    minusElement.setAttribute("onclick","changeValue(this)");
+    minusElement.addEventListener("click",changeValue);
     minusElement.innerHTML="-";  
     elementToAdd.append(checkboxElement);
     elementToAdd.append(lableElement);
@@ -74,12 +77,12 @@ function createNewPlayer(name){
 }  
 function renderBtns(){
     for(i=1;i<=40;i++){
-    let btnToAdd= document.createElement("button");
-    btnToAdd.innerHTML=i;
-    btnToAdd.setAttribute("onclick","addToMe(this)")
-    btnToAdd.setAttribute("name", "ini-btn");  
-    btnToAdd.style="width: 25px; box-sizing: border-box;"
-    document.getElementById("btns").appendChild(btnToAdd);
+        let btnToAdd= document.createElement("button");
+        btnToAdd.innerHTML=i;
+        btnToAdd.setAttribute("name", "ini-btn");  
+        btnToAdd.style="width: 25px; box-sizing: border-box;"
+        btnToAdd.addEventListener("click",addToMe);
+        document.getElementById("btns").appendChild(btnToAdd);
     }
 }  
 function reduceAll(){
@@ -94,8 +97,8 @@ function reduceAll(){
         let oldbtn= usedBtns[i];
         let newbtn=btns.find(element => element.innerHTML==oldbtn.innerHTML-10);
         if(newbtn!=undefined){
-        newbtn.title=oldbtn.title;
-        newbtn.style="border-color: blue; width: 25px; box-sizing: border-box;"
+            newbtn.title=oldbtn.title;
+            newbtn.style="border-color: blue; width: 25px; box-sizing: border-box;"
         }
         oldbtn.title="";
         oldbtn.style="width: 25px; box-sizing: border-box;"
@@ -103,6 +106,7 @@ function reduceAll(){
 }
 function changeValue(btn)
 {
+    btn=this;
     let name=btn.parentElement.id;
     let btns =Array.from(document.getElementsByName("ini-btn"));
     let btnWithName= btns.find(element => element.title.includes(name));
@@ -111,12 +115,12 @@ function changeValue(btn)
         let newbtn=btns.find(element => element.innerHTML==parseInt(btnWithName.innerHTML)+input);
         if(newbtn!=undefined){
             newbtn.title+="\n"+name;
-        newbtn.style="border-color: blue; width: 25px; box-sizing: border-box;"
+            newbtn.style="border-color: blue; width: 25px; box-sizing: border-box;"
         }
         btnWithName.title=btnWithName.title.replace(name,"");
         if(btnWithName.title.trim().length<1){
-        btnWithName.style="width: 25px; box-sizing: border-box;"
-        btnWithName.title="";   
+            btnWithName.style="width: 25px; box-sizing: border-box;"
+            btnWithName.title="";   
         }     
     }
     else{
@@ -128,8 +132,8 @@ function changeValue(btn)
         newbtn.style="border-color: blue; width: 25px; box-sizing: border-box;"
         btnWithName.title=btnWithName.title.replace(name,"");
         if(btnWithName.title.trim().length<1){
-        btnWithName.style="width: 25px; box-sizing: border-box;"
-        btnWithName.title="";   
+            btnWithName.style="width: 25px; box-sizing: border-box;"
+            btnWithName.title="";   
         }                  
     }
 }
